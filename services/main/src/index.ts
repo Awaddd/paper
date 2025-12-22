@@ -1,4 +1,6 @@
+import { readFile } from "node:fs/promises";
 import { program } from "commander";
+import { chunkMarkdown } from "./chunk.js";
 import { extractMarkdown } from "./pdf.js";
 
 program
@@ -14,6 +16,20 @@ program
     const markdown = await extractMarkdown(file);
     console.log("\n--- Extracted Markdown ---\n");
     console.log(markdown);
+  });
+
+// Temporary command for testing chunking (reads .md directly)
+program
+  .command("chunk <file>")
+  .description("Chunk a markdown file (test)")
+  .action(async (file: string) => {
+    const markdown = await readFile(file, "utf-8");
+    const chunks = await chunkMarkdown(markdown);
+    console.log(`\n--- ${chunks.length} Chunks ---\n`);
+    for (const chunk of chunks) {
+      console.log(`[${chunk.metadata.index}] ${chunk.text.slice(0, 100)}...`);
+      console.log("---");
+    }
   });
 
 program
