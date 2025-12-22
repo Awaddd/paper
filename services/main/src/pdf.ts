@@ -6,17 +6,8 @@ const MARKER_MODEL = "datalab-to/marker";
 
 const MarkerOutputSchema = z.object({
   markdown: z.string(),
-  images: z.record(z.string(), z.string()),
-  metadata: z.object({
-    pages: z.number(),
-    table_of_contents: z.array(
-      z.object({
-        title: z.string(),
-        level: z.number(),
-        page: z.number(),
-      })
-    ),
-  }),
+  images: z.array(z.unknown()),
+  metadata: z.unknown().nullable(),
 });
 
 type MarkerOutput = z.infer<typeof MarkerOutputSchema>;
@@ -58,7 +49,6 @@ export async function extractMarkdown(pdfPath: string): Promise<string> {
   // Step 2: Call Marker API
   console.log("Calling Marker API...");
   const output = await callMarker(fileUri);
-  console.log(`Extracted ${output.metadata.pages} pages`);
 
   return output.markdown;
 }
