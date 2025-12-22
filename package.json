@@ -1,15 +1,15 @@
 {
-  "name": "paper",
-  "private": true,
-  "type": "module",
-  "scripts": {
-    "check": "biome check .",
-    "format": "biome format --write ."
-  },
-  "devDependencies": {
-    "@biomejs/biome": "^1.9.4"
-  },
-  "dependencies": {
-    "zod": "^4.2.1"
-  }
+	"name": "paper",
+	"private": true,
+	"type": "module",
+	"scripts": {
+		"check": "biome check .",
+		"format": "biome format --write ."
+	},
+	"devDependencies": {
+		"@biomejs/biome": "^1.9.4"
+	},
+	"dependencies": {
+		"zod": "^4.2.1"
+	}
 }

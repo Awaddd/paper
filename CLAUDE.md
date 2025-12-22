@@ -2,12 +2,19 @@
 
 TypeScript RAG system for research papers.
 
+## Docker
+
+```bash
+docker compose up -d    # Start Qdrant (data persisted in volume)
+docker compose down     # Stop
+```
+
 ## Commands
 
 ```bash
 pnpm --filter @paper/main dev pdf <file>     # Extract markdown from PDF
-pnpm --filter @paper/main dev ingest <file>  # Full pipeline (TODO)
-pnpm --filter @paper/main dev search "query" # Search (TODO)
+pnpm --filter @paper/main dev ingest <file>  # Ingest markdown file
+pnpm --filter @paper/main dev search "query" # Search chunks
 pnpm --filter @paper/main dev ask "question" # RAG (TODO)
 ```
 
