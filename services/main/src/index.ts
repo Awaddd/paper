@@ -2,6 +2,7 @@ import { readFile } from "node:fs/promises";
 import { program } from "commander";
 import { chunkMarkdown } from "./chunk.js";
 import { embedText, embedTexts } from "./embed.js";
+import { generateAnswer } from "./generate.js";
 import { extractMarkdown } from "./pdf.js";
 import { ensureCollection, upsertChunk, searchChunks } from "./store.js";
 
@@ -93,8 +94,18 @@ program
 	.description("Ask a question (RAG)")
 	.option("-l, --limit <number>", "Number of context chunks", "3")
 	.action(async (question: string, options: { limit: string }) => {
-		console.log(`Asking: "${question}" (limit: ${options.limit})`);
-		// TODO: implement
+		console.log(`Asking: "${question}"\n`);
+
+		// Search for relevant context
+		const queryVector = await embedText(question);
+		const results = await searchChunks(queryVector, parseInt(options.limit));
+
+		console.log(`Found ${results.length} relevant chunks\n`);
+
+		// Generate answer
+		const answer = await generateAnswer(question, results);
+		console.log("--- Answer ---\n");
+		console.log(answer);
 	});
 
 program.parse();
