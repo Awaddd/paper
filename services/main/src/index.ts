@@ -1,5 +1,4 @@
 import { program } from "commander";
-import "dotenv/config";
 import { extractMarkdown } from "./pdf.js";
 
 program

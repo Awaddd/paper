@@ -1,18 +1,25 @@
-import Replicate from "replicate";
 import { readFile } from "node:fs/promises";
-
-const replicate = new Replicate();
+import { z } from "zod";
+import { replicate } from "./config.js";
 
 const MARKER_MODEL = "datalab-to/marker";
 
-interface MarkerOutput {
-  markdown: string;
-  images: Record<string, string>;
-  metadata: {
-    pages: number;
-    table_of_contents: Array<{ title: string; level: number; page: number }>;
-  };
-}
+const MarkerOutputSchema = z.object({
+  markdown: z.string(),
+  images: z.record(z.string(), z.string()),
+  metadata: z.object({
+    pages: z.number(),
+    table_of_contents: z.array(
+      z.object({
+        title: z.string(),
+        level: z.number(),
+        page: z.number(),
+      })
+    ),
+  }),
+});
+
+type MarkerOutput = z.infer<typeof MarkerOutputSchema>;
 
 /**
  * Convert a local PDF file to base64 data URI
@@ -29,15 +36,13 @@ async function pdfToDataUri(pdfPath: string): Promise<string> {
  * Call Marker API to extract markdown from PDF
  */
 async function callMarker(fileUri: string): Promise<MarkerOutput> {
-  // TODO: Call replicate.run() with MARKER_MODEL
-  // Input: { file: fileUri }
-  // Returns: MarkerOutput
-  const output = replicate.run("datalab-to/marker", {
+  const output = await replicate.run(MARKER_MODEL, {
     input: {
       file: fileUri,
     },
   });
-  throw new Error("Not implemented");
+
+  return MarkerOutputSchema.parse(output);
 }
 
 /**
