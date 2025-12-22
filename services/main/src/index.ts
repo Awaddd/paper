@@ -1,6 +1,7 @@
 import { readFile } from "node:fs/promises";
 import { program } from "commander";
 import { chunkMarkdown } from "./chunk.js";
+import { embedText } from "./embed.js";
 import { extractMarkdown } from "./pdf.js";
 
 program
@@ -30,6 +31,16 @@ program
       console.log(`[${chunk.metadata.index}] ${chunk.text.slice(0, 100)}...`);
       console.log("---");
     }
+  });
+
+// Temporary command for testing embeddings
+program
+  .command("embed <text>")
+  .description("Generate embedding for text (test)")
+  .action(async (text: string) => {
+    console.log(`Embedding: "${text.slice(0, 50)}..."`);
+    const vector = await embedText(text);
+    console.log(`\nVector (${vector.length} dims): [${vector.slice(0, 5).join(", ")}, ...]`);
   });
 
 program
