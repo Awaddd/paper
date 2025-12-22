@@ -1,17 +1,28 @@
 import { program } from "commander";
 import "dotenv/config";
+import { extractMarkdown } from "./pdf.js";
 
 program
   .name("paper")
   .description("RAG system for research papers")
   .version("0.0.1");
 
+// Temporary command for testing PDF extraction
+program
+  .command("pdf <file>")
+  .description("Extract markdown from PDF (test)")
+  .action(async (file: string) => {
+    const markdown = await extractMarkdown(file);
+    console.log("\n--- Extracted Markdown ---\n");
+    console.log(markdown);
+  });
+
 program
   .command("ingest <file>")
   .description("Ingest a PDF file")
   .action(async (file: string) => {
     console.log(`Ingesting: ${file}`);
-    // TODO: implement
+    // TODO: extract → chunk → embed → store
   });
 
 program
