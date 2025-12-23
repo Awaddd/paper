@@ -15,20 +15,20 @@ PDF upload → Marker (md) → Chunk → Qwen (embed) → Qdrant → Qwen (searc
 ## TODO
 
 ### MVP
-- [ ] PDF upload
-- [ ] Convert to markdown (Marker)
-- [ ] Chunk markdown (langchain.js markdown text splitter)
-- [ ] Generate embeddings (Qwen)
-- [ ] Store in Qdrant
-- [ ] Document retrieval/search (Qwen)
-- [ ] Ask AI (generation LLM - TBD which one)
-- [ ] Citations with exact quotes + source reference
+- [x] PDF upload (`pdf.ts`)
+- [x] Convert to markdown (Marker) (`pdf.ts`)
+- [x] Chunk markdown (langchain.js markdown text splitter) (`chunk.ts` - 1000 chars, 200 overlap)
+- [x] Generate embeddings (Qwen) (`embed.ts` - qwen3-embedding-8b)
+- [x] Store in Qdrant (`store.ts`)
+- [x] Document retrieval/search (`store.ts`)
+- [x] Ask AI (`generate.ts` - Claude 4.5 Haiku via Replicate)
+- [ ] Citations with exact quotes + source reference (currently just chunk index)
 - [ ] Web app UI
 
 ### Deferred
 - [ ] Metadata extraction (title, authors, date)
 - [ ] Original PDF storage for download/reference
-- [ ] Deduplication (same paper uploaded twice)
+- [x] Deduplication (`store.ts:35` - UUID v5 hash of content)
 - [ ] Processing status feedback to user
 - [ ] Error handling for weird/scanned PDFs
 
@@ -38,12 +38,14 @@ PDF upload → Marker (md) → Chunk → Qwen (embed) → Qdrant → Qwen (searc
 
 | Item | Decision |
 |------|----------|
-| Chunking | langchain.js markdown text splitter |
-| Embeddings | Qwen |
-| Vector store | Qdrant |
-| PDF conversion | Marker |
-| Citations | IN - exact quotes + page/section |
+| Chunking | langchain.js markdown text splitter (1000/200) |
+| Embeddings | Qwen3-embedding-8b via Replicate |
+| Vector store | Qdrant (localhost:6333) |
+| PDF conversion | Marker via Replicate |
+| Generation LLM | Claude 4.5 Haiku via Replicate |
+| Citations | IN - exact quotes + page/section (WIP - currently chunk index only) |
 | Metadata extraction | DEFERRED |
+| Deduplication | DONE - UUID v5 hash |
 | Multi-doc querying | IN |
 | Vertical positioning | IN (same tech, different marketing) |
 | Additional value-adds | LATER |
@@ -112,15 +114,15 @@ Text:
 - Display to user: "According to [Paper Title, p.12]: ..."
 
 ### Generation LLM
-- TBD: Claude API? OpenAI? Local?
-- Consider cost vs quality tradeoff
-- For MVP: whichever is easiest to integrate
+- **Decided:** Claude 4.5 Haiku via Replicate
+- Model: `anthropic/claude-4.5-haiku`
+- Prompt includes context chunks with index numbers for citation
 
 ---
 
 ## Open Questions
 
-- [ ] Which LLM for generation?
+- [x] Which LLM for generation? → Claude 4.5 Haiku
 - [ ] How to handle scanned/image-only PDFs?
 - [ ] Max file size limits?
 - [ ] Rate limiting for API costs?

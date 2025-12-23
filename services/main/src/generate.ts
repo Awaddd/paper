@@ -42,5 +42,5 @@ Question: ${query}`;
 		return result;
 	}
 
-	return result.join(" ");
+	return result.join("");
 }

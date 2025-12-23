@@ -70,17 +70,15 @@ export async function searchChunks(queryVector: number[], limit = 3): Promise<Se
 		with_payload: true,
 	});
 
-	console.log("response", response);
-
 	const payload = SearchResponseSchema.parse(response);
 
 	return payload
-		.filter((chunk) => chunk.payload !== null)
-		.map((chunk) => ({
+		.filter((r): r is typeof r & { payload: NonNullable<typeof r.payload> } => r.payload !== null)
+		.map((r) => ({
 			chunk: {
-				text: chunk.payload!.text,
-				metadata: { index: chunk.payload!.index },
+				text: r.payload.text,
+				metadata: { index: r.payload.index },
 			},
-			score: chunk.score,
+			score: r.score,
 		}));
 }
