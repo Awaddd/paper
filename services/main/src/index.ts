@@ -92,7 +92,7 @@ program
 program
 	.command("ask <question>")
 	.description("Ask a question (RAG)")
-	.option("-l, --limit <number>", "Number of context chunks", "3")
+	.option("-l, --limit <number>", "Number of context chunks", "5")
 	.action(async (question: string, options: { limit: string }) => {
 		console.log(`Asking: "${question}"\n`);
 
@@ -101,6 +101,8 @@ program
 		const results = await searchChunks(queryVector, parseInt(options.limit));
 
 		console.log(`Found ${results.length} relevant chunks\n`);
+
+		await new Promise((resolve) => setTimeout(resolve, 12000));
 
 		// Generate answer
 		const answer = await generateAnswer(question, results);
