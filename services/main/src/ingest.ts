@@ -3,11 +3,6 @@ import { embedTexts } from "./embed.js";
 import { ensureCollection, upsertChunk } from "./store.js";
 
 const BATCH_SIZE = 32;
-const RATE_LIMIT_DELAY_MS = 12000;
-
-function sleep(ms: number): Promise<void> {
-	return new Promise((resolve) => setTimeout(resolve, ms));
-}
 
 /**
  * Ingest chunks into vector store with batched embedding
@@ -25,7 +20,7 @@ export async function ingestChunks(chunks: Chunk[]): Promise<number> {
 
 		// Rate limit delay between batches
 		if (i + BATCH_SIZE < chunks.length) {
-			await sleep(RATE_LIMIT_DELAY_MS);
+			await new Promise((resolve) => setTimeout(resolve, 12000));
 		}
 	}
 

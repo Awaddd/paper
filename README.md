@@ -1,6 +1,6 @@
 # Paper
 
-RAG system for research papers. Feed it PDFs, ask it questions, get answers with citations.
+RAG system for research papers. Feed it PDFs, ask it questions, get answers with source references.
 
 ## Setup
 
@@ -27,7 +27,7 @@ pnpm --filter @paper/main dev ingest paper.md
 # Search chunks
 pnpm --filter @paper/main dev search "attention mechanism"
 
-# Ask questions (WIP)
+# Ask questions
 pnpm --filter @paper/main dev ask "how does the transformer handle long sequences?"
 ```
 
